@@ -2,9 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { getLeads, deleteLead } from '../../actions/leads';
-import Button from '@material-ui/core/Button';
 
-export class Leads extends Component {
+export class Activities extends Component {
   static propTypes = {
     leads: PropTypes.array.isRequired,
     getLeads: PropTypes.func.isRequired,
@@ -18,28 +17,32 @@ export class Leads extends Component {
   render() {
     return (
       <>
+        <h2>Leads</h2>
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Activity</th>
-              <th>Time</th>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
               <th />
             </tr>
           </thead>
           <tbody>
             {this.props.leads.map((lead) => (
               <tr key={lead.id}>
-                
-                <td>{lead.activity}</td>
                 <td>{lead.created_at}</td>
+                <td>{lead.name}</td>
+                <td>{lead.email}</td>
+                <td>{lead.message}</td>
                 <td>
-                  <Button
+                  <button
                     onClick={this.props.deleteLead.bind(this, lead.id)}
-                    variant="contained"
-                    color="secondary"
+                    className="btn btn-danger btn-sm"
                   >
+                    {' '}
                     Delete
-                  </Button>
+                  </button>
                 </td>
               </tr>
             ))}

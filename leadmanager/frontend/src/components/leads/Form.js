@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { addLead } from '../../actions/leads';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import Timer from './Timer'
 
 export class Form extends Component {
   state = {
-    name: '',
-    email: '',
-    message: '',
+    activity: '',
   };
 
   static propTypes = {
@@ -18,56 +21,35 @@ export class Form extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { name, email, message } = this.state;
-    const lead = { name, email, message };
+    const { activity } = this.state;
+    const lead = { activity };
     this.props.addLead(lead);
     this.setState({
-      name: '',
-      email: '',
-      message: '',
+      activity: '',
     });
   };
 
   render() {
-    const { name, email, message } = this.state;
+    const { name, activity } = this.state;
     return (
       <div className="card card-body mt-4 mb-4">
-        <h2>Add Lead</h2>
         <form onSubmit={this.onSubmit}>
           <div className="form-group">
-            <label>Name</label>
+            <label>Activity</label>
             <input
               className="form-control"
               type="text"
-              name="name"
+              name="activity"
               onChange={this.onChange}
-              value={name}
+              value={activity}
             />
           </div>
           <div className="form-group">
-            <label>Email</label>
-            <input
-              className="form-control"
-              type="email"
-              name="email"
-              onChange={this.onChange}
-              value={email}
-            />
-          </div>
-          <div className="form-group">
-            <label>Message</label>
-            <textarea
-              className="form-control"
-              type="text"
-              name="message"
-              onChange={this.onChange}
-              value={message}
-            />
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
+            <IconButton color="secondary" type="submit" aria-label="delete">
+              <AddBoxIcon style={{ fontSize: 40 }} />
+            </IconButton>
+            
+            <Timer></Timer>
           </div>
         </form>
       </div>

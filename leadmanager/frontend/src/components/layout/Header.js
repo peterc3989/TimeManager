@@ -8,8 +8,26 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from "@material-ui/core/Button";
+
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 import { logout } from '../../actions/auth';
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
 export class Header extends Component {
   static propTypes = {
@@ -31,6 +49,7 @@ export class Header extends Component {
           </Button>
         </li>
       </ul>
+      
     );
 
     const guestLinks = (
@@ -51,25 +70,16 @@ export class Header extends Component {
     return (
       <nav className="navbar navbar-expand-sm navbar-light bg-light">
         <div className="container">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarTogglerDemo01"
-            aria-controls="navbarTogglerDemo01"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
+          
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
             <a className="navbar-brand" href="#">
-              Lead Manager
+              Time Manager
             </a>
           </div>
           {isAuthenticated ? authLinks : guestLinks}
         </div>
       </nav>
+      
     );
   }
 }

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { register } from '../../actions/auth';
 import { createMessage } from '../../actions/messages';
-
+import Button from '@material-ui/core/Button';
 export class Register extends Component {
   state = {
     username: '',
@@ -86,9 +86,9 @@ export class Register extends Component {
               />
             </div>
             <div className="form-group">
-              <button type="submit" className="btn btn-primary">
+              <Button type="submit" variant="contained" color="secondary">
                 Register
-              </button>
+              </Button>
             </div>
             <p>
               Already have an account? <Link to="/login">Login</Link>

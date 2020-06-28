@@ -3,6 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
+import Button from '@material-ui/core/Button';
 /* eslint-disable */
 export class Login extends Component {
   state = {
@@ -55,9 +56,9 @@ export class Login extends Component {
             </div>
 
             <div className="form-group">
-              <button type="submit" className="btn btn-primary">
+              <Button type="submit" variant="contained" color="secondary">
                 Login
-              </button>
+              </Button>
             </div>
             <p>
               Don't have an account? <Link to="/register">Register</Link>
