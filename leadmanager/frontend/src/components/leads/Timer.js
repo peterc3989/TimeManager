@@ -1,19 +1,27 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AddBoxIcon from '@material-ui/icons/AddBox';
+import PauseIcon from '@material-ui/icons/Pause';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import moment from 'moment';
-import { getLeads, deleteLead } from '../../actions/leads';
+import { addLead } from '../../actions/leads';
+import styled from 'styled-components';
+import TextField from '@material-ui/core/TextField';
 
+const Wrapper = styled.div`
+  margin: 4%;
+  font-size: 25px;
+`;
 
 export default function Timer() {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
   const [pause, setPause] = useState(true);
+  const [activity, setActivity] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     let interval = null;
@@ -28,7 +36,7 @@ export default function Timer() {
           setMinutes(minutes + 1);
           setHours(0);
         } else setSeconds(seconds + 1);
-      }, 1000);
+      }, 10);
     } else if (pause && seconds && minutes && hours !== 0) {
       clearInterval(interval);
     }
@@ -44,21 +52,46 @@ export default function Timer() {
     setSeconds(0);
     setHours(0);
     setMinutes(0);
+    dispatch(addLead({ activity, hours, minutes }));
+    setActivity('');
+  };
+  const onChange = (e) => {
+    setActivity(e.target.value);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
   };
 
   return (
-    <div>
-      <p>
-        {hours} : {minutes} : {seconds}
-      </p>
-      <IconButton onClick={startTimer} color="secondary" aria-label="delete">
-        <AddBoxIcon style={{ fontSize: 40 }} />
-      </IconButton>
-      <Button onClick={pauseTimer}>Pause</Button>
-    </div>
+    <Wrapper>
+      <form onSubmit={onSubmit}>
+        <TextField
+          name="activity"
+          onChange={onChange}
+          value={activity}
+          id="outlined-basic"
+          label="Activity"
+          variant="outlined"
+          text="primary"
+        />
+        <div style={{ color: '#e66465' }}>
+          {hours} : {minutes} : {seconds}
+        </div>
+        <div>
+          <IconButton onClick={startTimer} color="secondary" aria-label="delete">
+            <PlayArrowIcon style={{ fontSize: 40 }} />
+          </IconButton>
+          <IconButton type="submit" onClick={pauseTimer} color="secondary" aria-label="delete">
+            <PauseIcon style={{ fontSize: 40 }} />
+          </IconButton>
+        </div>
+      </form>
+    </Wrapper>
   );
 }
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-});
+/*static propTypes = {
+  auth: PropTypes.object.isRequired,
+  logout: PropTypes.func.isRequired,
+};*/

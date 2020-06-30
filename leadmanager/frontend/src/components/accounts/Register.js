@@ -1,107 +1,135 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../../actions/auth';
 import { createMessage } from '../../actions/messages';
-import Button from '@material-ui/core/Button';
-export class Register extends Component {
-  state = {
-    username: '',
-    email: '',
-    password: '',
-    password2: '',
-  };
+import { makeStyles } from '@material-ui/core/styles';
 
-  static propTypes = {
-    register: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool,
-  };
+const useStyles = makeStyles({
+  form: {
+    display:'flex',
+    flexDirection: 'column',
+    lineHeight: 1.5,
+    boxSizing: 'border-box',
+    fontSize: '16px',
+    marginLeft:'20%',
+    marginRight:'20%',
+    borderWidth:'1',
+    borderColor: '#e66465',
+    border: 'solid',
+    
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: 2,
+  },
+  formInput: {
+    alignSelf: 'flex-start',
 
-  onSubmit = (e) => {
+    padding: '0.8em',
+    fontSize: '0.9em',
+    fontFamily: '"Source Sans Pro", sans-serif',
+
+    outline: 'none',
+    border: '1px solid #dddddd',
+    borderRadius: '4px',
+    background: '#f9f9f9',
+  },
+  formLabel: {
+    fontWeight: 600,
+    padding: '10px 0',
+    alignSelf: 'flex-start',
+  },
+});
+
+export default function Register() {
+  const classes = useStyles();
+  const [ username, setUsername ] = useState('');
+  const [ email, setEmail ] = useState('');
+  const [ password, setPassword ] = useState('');
+  const [ password2, setPassword2 ] = useState('');
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const onSubmit = (e) => {
     e.preventDefault();
-    const { username, email, password, password2 } = this.state;
     if (password !== password2) {
-      this.props.createMessage({ passwordNotMatch: 'Passwords do not match' });
+      dispatch(createMessage({ passwordNotMatch: 'Passwords do not match' }));
     } else {
       const newUser = {
         username,
         password,
         email,
       };
-      this.props.register(newUser);
+      dispatch(register(newUser));
     }
   };
 
-  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
-
-  render() {
-    if (this.props.isAuthenticated) {
-      return <Redirect to="/" />;
-    }
-    const { username, email, password, password2 } = this.state;
-    return (
-      <div className="col-md-6 m-auto">
-        <div className="card card-body mt-5">
-          <h2 className="text-center">Register</h2>
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                className="form-control"
-                name="username"
-                onChange={this.onChange}
-                value={username}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                onChange={this.onChange}
-                value={email}
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={this.onChange}
-                value={password}
-              />
-            </div>
-            <div className="form-group">
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password2"
-                onChange={this.onChange}
-                value={password2}
-              />
-            </div>
-            <div className="form-group">
-              <Button type="submit" variant="contained" color="secondary">
-                Register
-              </Button>
-            </div>
-            <p>
-              Already have an account? <Link to="/login">Login</Link>
-            </p>
-          </form>
-        </div>
-      </div>
-    );
+  const onChange = (e) => {
+    if (e.target.name === "username") setUsername(e.target.value);
+    if (e.target.name === "email") setEmail(e.target.value);
+    if (e.target.name === "password") setPassword(e.target.value);
+    if (e.target.name === "password2") setPassword2(e.target.value);
+  };
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
   }
+  return (
+    <div>
+      <h2 className="text-center">Register</h2>
+      <form onSubmit={onSubmit} className={classes.form}>
+        <div className={classes.formItem}>
+          <label className={classes.formLabel}>Username </label>
+          <input
+            type="text"
+            name="username"
+            className={classes.formInput}
+            onChange={onChange}
+            value={username}
+          />
+        </div>
+        <div className={classes.formItem}>
+          <label className={classes.formLabel}>Email </label>
+          <input
+            type="email"
+            name="email"
+            className={classes.formInput}
+            onChange={onChange}
+            value={email}
+          />
+        </div>
+        <div className={classes.formItem}>
+          <label className={classes.formLabel}>Password</label>
+          <input
+            type="password"
+            name="password"
+            className={classes.formInput}
+            onChange={onChange}
+            value={password}
+          />
+        </div>
+        <div className={classes.formItem}>
+          <label className={classes.formLabel}>Confirm Password </label>
+          <input
+            type="password"
+            name="password2"
+            className={classes.formInput}
+            onChange={onChange}
+            value={password2}
+          />
+        </div>
+        <Button type="submit" variant="contained" color="secondary">
+          Register
+        </Button>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </form>
+    </div>
+  );
 }
-
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-});
-
-export default connect(mapStateToProps, { register, createMessage })(Register);

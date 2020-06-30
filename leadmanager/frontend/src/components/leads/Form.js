@@ -6,11 +6,12 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import Timer from './Timer'
 
 export class Form extends Component {
   state = {
     activity: '',
+    minutes: 2,
+    hours: 2,
   };
 
   static propTypes = {
@@ -21,8 +22,8 @@ export class Form extends Component {
 
   onSubmit = (e) => {
     e.preventDefault();
-    const { activity } = this.state;
-    const lead = { activity };
+    const { activity,minutes,hours } = this.state;
+    const lead = { activity,minutes,hours };
     this.props.addLead(lead);
     this.setState({
       activity: '',
@@ -30,7 +31,7 @@ export class Form extends Component {
   };
 
   render() {
-    const { name, activity } = this.state;
+    const { activity,minutes,hours } = this.state;
     return (
       <div className="card card-body mt-4 mb-4">
         <form onSubmit={this.onSubmit}>
@@ -49,7 +50,6 @@ export class Form extends Component {
               <AddBoxIcon style={{ fontSize: 40 }} />
             </IconButton>
             
-            <Timer></Timer>
           </div>
         </form>
       </div>

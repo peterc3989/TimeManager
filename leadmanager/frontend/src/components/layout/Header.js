@@ -1,13 +1,8 @@
-/* eslint-disable react/forbid-prop-types */
-/* eslint-disable react/static-property-placement */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prefer-stateless-function */
+import { useDispatch, useSelector } from 'react-redux';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Button from "@material-ui/core/Button";
+import Button from '@material-ui/core/Button';
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -16,76 +11,71 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import { logout } from '../../actions/auth';
+import { red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  toolbar: {
+    
+    marginLeft: '20%',
+    marginRight: '20%',
+    color:'white',
   },
   title: {
+    
     flexGrow: 1,
   },
+  button: {
+    marginLeft:'3%',
+    fontSize: '15px',
+    color: 'white',
+    textTransform: 'none',
+  },
+  
 }));
 
-export class Header extends Component {
-  static propTypes = {
-    auth: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired,
-  };
-
-  render() {
-    const { isAuthenticated, user } = this.props.auth;
-
-    const authLinks = (
-      <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-        <span className="navbar-text mr-3">
-          <strong>{user ? `Welcome ${user.username}` : ''}</strong>
-        </span>
-        <li className="nav-item">
-          <Button onClick={this.props.logout}>
-            Logout
-          </Button>
-        </li>
-      </ul>
+export default function Header() {
+  const classes = useStyles();
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = auth;
+  const authLinks = (
+    <>
+      <Typography variant="h6">{user ? `${user.username}` : ''}</Typography>
+      <Button
+        className={classes.button}
+        variant="contained"
+        color="secondary"
+        onClick={() => dispatch(logout())}
+      >
+        Logout
+      </Button>
+    </>
+  );
+  const guestLinks = (
+    <>
       
-    );
+      <Button className={classes.button} href="/#/register" color="secondary">
+        Register
+      </Button>
+      <Button className={classes.button} href="/#/login" color="secondary">
+        Login
+      </Button>
+    </>
+  );
 
-    const guestLinks = (
-      <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
-        <li className="nav-item">
-          <Link to="/register" className="nav-link">
-            Register
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
-        </li>
-      </ul>
-    );
-
-    return (
-      <nav className="navbar navbar-expand-sm navbar-light bg-light">
-        <div className="container">
-          
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a className="navbar-brand" href="#">
-              Time Manager
-            </a>
-          </div>
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" >
+        <Toolbar color="secondary" className={classes.toolbar}>
+          <Typography variant="h6" className={classes.title}>
+            Time Manager
+          </Typography>
           {isAuthenticated ? authLinks : guestLinks}
-        </div>
-      </nav>
-      
-    );
-  }
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 }
-
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-});
-
-export default connect(mapStateToProps, { logout })(Header);

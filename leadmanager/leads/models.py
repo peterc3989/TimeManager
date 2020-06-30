@@ -12,6 +12,8 @@ class Lead(models.Model):
 
 class Activity(models.Model):
     activity = models.CharField(max_length=100)
+    minutes = models.PositiveIntegerField()
+    hours = models.PositiveIntegerField()
     owner = models.ForeignKey(
         User, related_name="activities", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

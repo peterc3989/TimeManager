@@ -1,77 +1,112 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { login } from '../../actions/auth';
 import Button from '@material-ui/core/Button';
-/* eslint-disable */
-export class Login extends Component {
-  state = {
-    username: '',
-    password: '',
-  };
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../actions/auth';
 
-  static propTypes = {
-    login: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool,
-  };
+import { makeStyles } from '@material-ui/core/styles';
 
-  onSubmit = (e) => {
-    e.preventDefault();
-    this.props.login(this.state.username, this.state.password);
-  };
+const useStyles = makeStyles({
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    lineHeight: 1.5,
+    boxSizing: 'border-box',
+    fontSize: '16px',
+    marginLeft: '20%',
+    marginRight: '20%',
+    borderWidth: '1',
+    borderColor: '#e66465',
+    border: 'solid',
 
-  onChange = (e) => this.setState({ [e.target.name]: e.target.value });
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  formItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginBottom: 2,
+  },
+  formInput: {
+    alignSelf: 'flex-start',
 
-  render() {
-    if (this.props.isAuthenticated) {
-      return <Redirect to="/" />;
-    }
-    const { username, password } = this.state;
-    return (
-      <div className="col-md-6 m-auto">
-        <div className="card card-body mt-5">
-          <h2 className="text-center">Login</h2>
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                className="form-control"
-                name="username"
-                onChange={this.onChange}
-                value={username}
-              />
-            </div>
+    padding: '0.8em',
+    fontSize: '0.9em',
+    fontFamily: '"Source Sans Pro", sans-serif',
 
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={this.onChange}
-                value={password}
-              />
-            </div>
-
-            <div className="form-group">
-              <Button type="submit" variant="contained" color="secondary">
-                Login
-              </Button>
-            </div>
-            <p>
-              Don't have an account? <Link to="/register">Register</Link>
-            </p>
-          </form>
-        </div>
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
+    outline: 'none',
+    border: '1px solid #dddddd',
+    borderRadius: '4px',
+    background: '#f9f9f9',
+  },
+  formLabel: {
+    fontWeight: 600,
+    padding: '10px 0',
+    alignSelf: 'flex-start',
+  },
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default function Login() {
+  const classes = useStyles();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    dispatch(login(username, password));
+  };
+
+  const onChange = (e) => {
+    if (e.target.name === 'username') setUsername(e.target.value);
+    if (e.target.name === 'password') setPassword(e.target.value);
+  };
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+  return (
+    <div className="card card-body mt-5">
+      <h2>Login</h2>
+      <form className={classes.form} onSubmit={onSubmit}>
+        <div className={classes.formItem}>
+          <label className={classes.formLabel} htmlFor="username">
+            Username
+          </label>
+          <input
+            id="username"
+            type="text"
+            className={classes.formInput}
+            name="username"
+            onChange={onChange}
+            value={username}
+          />
+        </div>
+
+        <div className={classes.formItem}>
+          <label className={classes.formLabel} htmlFor="password">
+            Password
+          </label>
+          <input
+            id="password"
+            type="password"
+            className={classes.formInput}
+            name="password"
+            onChange={onChange}
+            value={password}
+          />
+        </div>
+
+        <div className={classes.formItem}>
+          <Button type="submit" variant="contained" color="secondary">
+            Submit
+          </Button>
+        </div>
+        <p>
+          Don't have an account?
+          <Link to="/register">Register</Link>
+        </p>
+      </form>
+    </div>
+  );
+}
