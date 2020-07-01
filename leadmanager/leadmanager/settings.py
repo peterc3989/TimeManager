@@ -10,6 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 import os
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config()
+}
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,6 +30,13 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['reango.herokuapp.com','127.0.0.1','localhost']
 
+
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE=True
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+SECURE_HSTS_PRELOAD=True
 
 # Application definition
 
@@ -83,23 +94,25 @@ WSGI_APPLICATION = 'leadmanager.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 
-DATABASES = {
-    'default': {
+#DATABASES = {
+ #   'default': {
+#
+ #       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#
+ #       'NAME': 'ReangoDB',
+#
+ #       'USER': 'postgres',
+#
+ #       'PASSWORD': 'taeyeon9',
+#
+ #       'HOST': 'localhost',
+#
+ #       'PORT': '5432',
+#
+ #   }
+#}
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'ReangoDB',
-
-        'USER': 'postgres',
-
-        'PASSWORD': 'taeyeon9',
-
-        'HOST': 'localhost',
-
-        'PORT': '5432',
-
-    }
-}
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -139,3 +152,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
+
+
+

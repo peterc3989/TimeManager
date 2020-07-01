@@ -44,6 +44,12 @@ const useStyles = makeStyles({
     padding: '10px 0',
     alignSelf: 'flex-start',
   },
+  button: {
+    marginLeft:'3%',
+    fontSize: '15px',
+    color: 'white',
+    textTransform: 'none',
+  },
 });
 
 export default function Login() {
@@ -98,8 +104,8 @@ export default function Login() {
         </div>
 
         <div className={classes.formItem}>
-          <Button type="submit" variant="contained" color="secondary">
-            Submit
+          <Button className={classes.button} type="submit" variant="contained" color="secondary">
+            Login
           </Button>
         </div>
         <p>

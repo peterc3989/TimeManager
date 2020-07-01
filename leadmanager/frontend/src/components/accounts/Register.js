@@ -46,6 +46,12 @@ const useStyles = makeStyles({
     padding: '10px 0',
     alignSelf: 'flex-start',
   },
+  button: {
+    marginLeft:'3%',
+    fontSize: '15px',
+    color: 'white',
+    textTransform: 'none',
+  },
 });
 
 export default function Register() {
@@ -123,7 +129,7 @@ export default function Register() {
             value={password2}
           />
         </div>
-        <Button type="submit" variant="contained" color="secondary">
+        <Button className={classes.button} type="submit" variant="contained" color="secondary">
           Register
         </Button>
         <p>
