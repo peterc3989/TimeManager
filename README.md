@@ -1,7 +1,7 @@
 # Time Manager
 
 > Full stack Django/React/Redux app that uses token based authentication with Knox.
-
+> Deployed at Heroku https://reango.herokuapp.com/
 ## Quick Start
 
 ```bash
